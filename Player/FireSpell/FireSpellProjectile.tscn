@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://bd60vykuo3vin"]
+
+[ext_resource type="Script" path="res://Player/FireSpell/FireSpellProjectile.gd" id="1_1i3lh"]
+
+[sub_resource type="Curve" id="Curve_hfcj7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_2x83c"]
+curve = SubResource("Curve_hfcj7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_r8h08"]
+emission_shape = 1
+emission_sphere_radius = 0.1
+gravity = Vector3(0, 5, 0)
+scale_min = 0.15
+scale_max = 0.15
+scale_curve = SubResource("CurveTexture_2x83c")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ne62s"]
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.415686, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0hn68"]
+material = SubResource("StandardMaterial3D_ne62s")
+radius = 0.75
+height = 1.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wo6am"]
+
+[node name="FireSpellProjectile" type="Area3D"]
+script = ExtResource("1_1i3lh")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+amount = 30
+lifetime = 0.5
+speed_scale = 2.0
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_r8h08")
+draw_pass_1 = SubResource("SphereMesh_0hn68")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_wo6am")
+
+[node name="Expiration" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Expiration" to="." method="_on_expiration_timeout"]

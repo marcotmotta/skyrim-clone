@@ -1,0 +1,111 @@
+[gd_scene load_steps=13 format=3 uid="uid://bcqw6wmx2uotm"]
+
+[ext_resource type="Script" path="res://Player/Player.gd" id="1_e7svu"]
+[ext_resource type="PackedScene" uid="uid://c5fntpwewtbt" path="res://Player/Sword/Sword.tscn" id="2_s5vsn"]
+[ext_resource type="PackedScene" uid="uid://cnx5m2lp2he15" path="res://Player/FireSpell/FireSpell.tscn" id="3_dwayu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bt4x"]
+albedo_color = Color(0, 1, 0.666667, 1)
+
+[sub_resource type="CapsuleMesh" id="1"]
+material = SubResource("StandardMaterial3D_6bt4x")
+radius = 0.3
+
+[sub_resource type="CapsuleShape3D" id="3"]
+radius = 0.3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nv3yf"]
+bg_color = Color(0, 0, 0, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x08av"]
+bg_color = Color(0.729412, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ka2u3"]
+bg_color = Color(0, 0, 0, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43ffm"]
+bg_color = Color(0.027451, 0, 0.819608, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lluhs"]
+bg_color = Color(0, 0, 0, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r0rgr"]
+bg_color = Color(0.00784314, 0.509804, 0, 1)
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+script = ExtResource("1_e7svu")
+
+[node name="Rotation_Helper" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.869524, 0)
+
+[node name="Camera" type="Camera3D" parent="Rotation_Helper"]
+current = true
+
+[node name="Slot1" type="Marker3D" parent="Rotation_Helper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, -0.25, -0.9)
+
+[node name="Sword" parent="Rotation_Helper/Slot1" instance=ExtResource("2_s5vsn")]
+
+[node name="Slot2" type="Marker3D" parent="Rotation_Helper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, -0.25, -0.9)
+
+[node name="FireSpell" parent="Rotation_Helper/Slot2" instance=ExtResource("3_dwayu")]
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+mesh = SubResource("1")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+shape = SubResource("3")
+
+[node name="ManaRegenDelay" type="Timer" parent="."]
+
+[node name="StaminaRegenDelay" type="Timer" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/Control"]
+layout_mode = 2
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 440.0
+offset_bottom = 70.0
+size_flags_horizontal = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_nv3yf")
+theme_override_styles/fill = SubResource("StyleBoxFlat_x08av")
+value = 50.0
+show_percentage = false
+
+[node name="ManaBar" type="ProgressBar" parent="CanvasLayer/Control"]
+layout_mode = 2
+offset_left = 40.0
+offset_top = 80.0
+offset_right = 340.0
+offset_bottom = 100.0
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_ka2u3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_43ffm")
+value = 50.0
+show_percentage = false
+
+[node name="StaminaBar" type="ProgressBar" parent="CanvasLayer/Control"]
+layout_mode = 2
+offset_left = 40.0
+offset_top = 110.0
+offset_right = 340.0
+offset_bottom = 130.0
+size_flags_horizontal = 8
+theme_override_styles/background = SubResource("StyleBoxFlat_lluhs")
+theme_override_styles/fill = SubResource("StyleBoxFlat_r0rgr")
+value = 50.0
+show_percentage = false
+
+[connection signal="timeout" from="ManaRegenDelay" to="." method="_on_mana_regen_delay_timeout"]
+[connection signal="timeout" from="StaminaRegenDelay" to="." method="_on_stamina_regen_delay_timeout"]

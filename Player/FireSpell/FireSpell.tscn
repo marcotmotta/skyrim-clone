@@ -1,0 +1,84 @@
+[gd_scene load_steps=12 format=3 uid="uid://cnx5m2lp2he15"]
+
+[ext_resource type="Script" path="res://Player/FireSpell/FireSpell.gd" id="1_wogx5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7o1rb"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_t56gq"]
+material = SubResource("StandardMaterial3D_7o1rb")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="Curve" id="Curve_8u3q5"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_2x24k"]
+curve = SubResource("Curve_8u3q5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4ek1v"]
+emission_shape = 1
+emission_sphere_radius = 0.1
+gravity = Vector3(0, 5, 0)
+scale_min = 0.15
+scale_max = 0.15
+scale_curve = SubResource("CurveTexture_2x24k")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cqt3h"]
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.415686, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0uxfa"]
+material = SubResource("StandardMaterial3D_cqt3h")
+radius = 0.75
+height = 1.5
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_b6v7j"]
+height = 5.0
+radius = 2.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pj6ft"]
+direction = Vector3(0, 0, -1)
+spread = 20.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+scale_min = 0.15
+scale_max = 0.15
+scale_curve = SubResource("CurveTexture_2x24k")
+
+[sub_resource type="SphereMesh" id="SphereMesh_oksx3"]
+material = SubResource("StandardMaterial3D_cqt3h")
+radius = 0.75
+height = 1.5
+
+[node name="FireSpell" type="Area3D"]
+script = ExtResource("1_wogx5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("SphereMesh_t56gq")
+
+[node name="FireSpell" type="GPUParticles3D" parent="."]
+amount = 30
+lifetime = 0.5
+speed_scale = 2.0
+process_material = SubResource("ParticleProcessMaterial_4ek1v")
+draw_pass_1 = SubResource("SphereMesh_0uxfa")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -2.21644)
+shape = SubResource("CylinderShape3D_b6v7j")
+
+[node name="Fire" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 100
+lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_pj6ft")
+draw_pass_1 = SubResource("SphereMesh_oksx3")
+
+[node name="TickRate" type="Timer" parent="."]
+
+[connection signal="timeout" from="TickRate" to="." method="_on_tick_rate_timeout"]

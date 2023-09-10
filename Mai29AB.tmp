@@ -1,0 +1,41 @@
+[gd_scene load_steps=9 format=3 uid="uid://cttjwd4pw5ium"]
+
+[ext_resource type="PackedScene" uid="uid://bcqw6wmx2uotm" path="res://Player/Player.tscn" id="1_d2ge3"]
+[ext_resource type="Material" uid="uid://1bwguiwakrxd" path="res://Dirt/dirt.tres" id="2_klp8d"]
+[ext_resource type="PackedScene" uid="uid://b7r0s4ummknjj" path="res://Enemy/Enemy.tscn" id="3_8qul2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c3hqb"]
+
+[sub_resource type="Sky" id="Sky_3g78x"]
+sky_material = SubResource("ProceduralSkyMaterial_c3hqb")
+
+[sub_resource type="Environment" id="Environment_6oj76"]
+background_mode = 2
+background_energy_multiplier = 2.0
+sky = SubResource("Sky_3g78x")
+
+[sub_resource type="BoxMesh" id="BoxMesh_mkvra"]
+material = ExtResource("2_klp8d")
+size = Vector3(200, 1, 200)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ow585"]
+points = PackedVector3Array(-100, -0.5, -100, -100, 0.5, -100, 100, -0.5, -100, -100, -0.5, 100, -100, 0.5, 100, 100, 0.5, -100, 100, -0.5, 100, 100, 0.5, 100)
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6oj76")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_mkvra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ow585")
+
+[node name="Player" parent="." instance=ExtResource("1_d2ge3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="Enemy" parent="." instance=ExtResource("3_8qul2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.11653, -23.6434)
